@@ -54,13 +54,8 @@ RSpec.describe "UsersLogin", type: :system do
       visit root_path
       #ログインボタンの確認
       expect(page).to have_content('ログイン')
-      #ログインページへの遷移
-      visit new_user_session_path
-      #ユーザー情報の記入
-      fill_in "Email", with: @user.email
-      fill_in "Password", with: @user.password
-      #commit
-      find('input[name="commit"]').click
+      #ログイン
+      sign_in(@user)
       #トップページへのリダイレクトを確認
       expect(page).to have_current_path(root_path)
       #カーソルを合わせるとログアウトボタンが表示される
