@@ -1,11 +1,6 @@
 class TweetsController < ApplicationController
   before_action :set_tweet, only: [:edit, :show]
-  before_action :no_sesstion_to_index, except: [:index, :show, :search]
-
-  # multiple redirects error
-  # create, update, destroyアクションを抜けてafter_actionメソッドを処理
-  # アクション抜けたときにリダイレクトが入るらしい。
-  # after_action :to_index, only: [:create, :update, :destroy]
+  before_action :to_index, except: [:index, :show, :search]
 
   def index
     @tweets = Tweet.includes(:user).order("created_at  DESC")
@@ -22,7 +17,7 @@ class TweetsController < ApplicationController
 
   def create
     Tweet.create(tweet_params)
-    redirect_to(action: :index)
+    redirect_to '/'
   end
 
   def edit
@@ -31,13 +26,13 @@ class TweetsController < ApplicationController
   def update
     tweet = Tweet.find(params[:id])
     tweet.update(tweet_params)
-    redirect_to(action: :index)
+    redirect_to root_path
   end
 
   def destroy
     tweet = Tweet.find(params[:id])
     tweet.destroy
-    redirect_to(action: :index)
+    redirect_to root_path
   end
 
   def search
@@ -53,7 +48,9 @@ class TweetsController < ApplicationController
     @tweet = Tweet.find(params[:id])
   end
 
-  def no_sesstion_to_index
-    redirect_to(action: :index) unless user_signed_in?
+  def to_index
+    unless user_signed_in?
+      redirect_to action: :index
+    end
   end
 end
