@@ -1,8 +1,4 @@
-class Tweet < ApplicationRecord
-  validates :text, :image, presence: true
-  belongs_to :user
-  has_many :comments
-
+class SearchTweetsService
   def self.search(search)
     if search != ""
       Tweet.where('text LIKE(?)', "%#{search}%")
